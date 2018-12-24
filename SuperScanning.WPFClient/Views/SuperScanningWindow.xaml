@@ -1,0 +1,113 @@
+﻿<Controls:MetroWindow x:Class="SuperScanning.WPFClient.Views.SuperScanningWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:local="clr-namespace:SuperScanning.WPFClient.Views"
+        xmlns:uscrl="clr-namespace:SuperScanning.WPFClient.UsControls"
+        mc:Ignorable="d"
+        DataContext="{Binding Source={StaticResource Locator},Path=SuperScanning}"
+         d:DesignHeight="1080" d:DesignWidth="1920" 
+        Title="SuperScanningWindow" >
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="设置" Command="{Binding OpenSettingCmd}" />
+            <Button Content="登录" Click="ShowLoginDialog" />
+            <Button  Name="loginInfo" Content="Nologin"/>
+            <Button Content="单号规则" Click="ShowMessageDialog" />
+            <Button Content="测试" Command="{Binding TestCmd}" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                   Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    </Rectangle>
+                    <TextBlock Margin="4 0 0 0"
+                   VerticalAlignment="Center"
+                   Text="---" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout 
+                IsOpen="{Binding FlyOutIsOpen, Mode=TwoWay}"
+                Header="设置" 
+                Position="Right" 
+                Width="400">
+                <uscrl:SettingUsCrl DataContext="{Binding Source={StaticResource Locator},Path=Setting}" />
+                <!-- Your custom content here -->
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"  />
+        </Grid.ColumnDefinitions>
+        <Grid Margin="0" Grid.Column="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*" MinWidth="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <TextBlock  Grid.Row="0" Grid.Column="0" Margin="10 0 0 0" VerticalAlignment="Center" FontSize="17" HorizontalAlignment="Left">快递公司:</TextBlock>
+            <TextBlock  Grid.Row="0" Grid.Column="1" Margin="10 0 0 0" VerticalAlignment="Center" FontSize="17" HorizontalAlignment="Left" Text="{Binding ExpressCompany}"></TextBlock>
+            <TextBlock  Grid.Row="1" Grid.Column="0" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17">识别单号:</TextBlock>
+            <TextBlock  Grid.Row="1" Grid.Column="1" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" Text="{Binding OrderId}"></TextBlock>
+            <TextBlock  Grid.Row="2" Grid.Column="0" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17">货品重量:</TextBlock>
+            <TextBlock  Grid.Row="2" Grid.Column="1" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" Text="{Binding Weight}"></TextBlock>
+
+            <TextBlock  Grid.Row="3" Grid.Column="0" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17">扫描状态:</TextBlock>
+            <TextBlock  Grid.Row="3" Grid.Column="1" Margin="10 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" Text="{Binding ScanStatus}"></TextBlock>
+        </Grid>
+        <Grid Margin="0" Grid.Column="1">
+            <Border BorderThickness="20" Background="Gray">
+                <DataGrid ItemsSource="{Binding ScanDatas}" Name="DataGrid" HorizontalScrollBarVisibility="Hidden"  GridLinesVisibility="All" HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black" HorizontalContentAlignment="Center" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"  ColumnHeaderHeight="50" Margin="5" >
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MetroDataGridColumnHeader}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                    </Style>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource MetroDataGridCell}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                        <Setter Property="Height" Value="35"></Setter>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="3*"  Header="单号">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Code}" ></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="2*" Binding="{Binding Weight }"  Header="重量"></DataGridTextColumn>
+                    <DataGridTextColumn Width="3*" Binding="{Binding ScanDate,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"  Header="扫描时间"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            </Border>
+        </Grid>
+        <Grid Margin="0" Grid.Column="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+                <Image Grid.Row="0" Source="{Binding WBitmap}"></Image>
+            <TextBlock Grid.Row="1" Text="{Binding CodeMsg}"></TextBlock>
+        </Grid>
+    </Grid>
+</Controls:MetroWindow>
